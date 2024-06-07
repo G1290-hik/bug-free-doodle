@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:collection/collection.dart';
-import 'package:responsivev2/model/stack_model.dart';
+import 'package:responsivev2/model/model.dart';
+import 'package:responsivev2/views/views.dart';
 import '../widgets/widgets.dart';
-import 'create_new_card_view.dart';
 
 class CardView extends StatefulWidget {
   const CardView({
@@ -20,6 +20,7 @@ class CardView extends StatefulWidget {
 class _CardViewState extends State<CardView> with SingleTickerProviderStateMixin {
   late List<CardState> _cardStates = [];
   int _currentIndex = 0;
+  int _totalCards = 0;
   late AnimationController _animationController;
 
   @override
@@ -32,38 +33,31 @@ class _CardViewState extends State<CardView> with SingleTickerProviderStateMixin
     _initializeCardStates();
   }
 
-  void _initializeCardStates() async {
+  Future<void> _initializeCardStates() async {
     final box = await Hive.openBox<FlashcardStack>('flashcardStacks');
-    debugPrint("Hive box opened. Contents:");
-    for (var stack in box.values) {
-      debugPrint("Stack name: ${stack.name}, Cards: ${stack.cards.length}");
-    }
-
-    final stack = box.values.firstWhereOrNull((stack) =>
-    stack.name == widget.stackName);
+    final stack = box.values.firstWhereOrNull((stack) => stack.name == widget.stackName);
 
     if (stack != null) {
-      debugPrint("Stack found: ${stack.name}, Cards: ${stack.cards.length}");
       setState(() {
-        _cardStates = stack.cards.map((card) =>
-            CardState(showFrontSide: true, flipXAxis: false, flashCard: card)).toList();
+        _cardStates = stack.cards
+            .map((card) => CardState(showFrontSide: true, flipXAxis: false, flashCard: card))
+            .toList();
+        _totalCards = stack.cards.length;
       });
     } else {
-      debugPrint("Stack not found for name: ${widget.stackName}");
       setState(() {
         _cardStates = [];
+        _totalCards = 0;
       });
     }
 
-    _currentIndex =
-    0;
+    _currentIndex = 0; // Reset the current index whenever we initialize the card states
   }
 
   void _switchCard() {
     if (_cardStates.isNotEmpty) {
       setState(() {
-        _cardStates[_currentIndex].showFrontSide =
-        !_cardStates[_currentIndex].showFrontSide;
+        _cardStates[_currentIndex].showFrontSide = !_cardStates[_currentIndex].showFrontSide;
       });
       _animationController.forward(from: 0);
     }
@@ -83,7 +77,6 @@ class _CardViewState extends State<CardView> with SingleTickerProviderStateMixin
   void _resetDeck() {
     _initializeCardStates();
   }
-
   double _calculateProgress() {
     if (_cardStates.isEmpty) {
       return 1.0; // All cards have been viewed
@@ -92,16 +85,40 @@ class _CardViewState extends State<CardView> with SingleTickerProviderStateMixin
         _cardStates.length; // Progress based on the number of cards
   }
 
-  Future<void> _navigateToCreateCardScreen(BuildContext context) async {
-    final newCardText = await Navigator.push(
+  Future<void> _navigateToAddCardScreen(BuildContext context) async {
+    final newCard = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const CreateCardScreen()),
+      MaterialPageRoute(
+        builder: (context) => AddCardsToStackScreen(stackName: widget.stackName),
+      ),
     );
 
-    if (newCardText != null && newCardText is String) {
+    if (newCard != null && newCard is Flashcard) {
+      final box = await Hive.openBox<FlashcardStack>('flashcardStacks');
+      final stack = box.values.firstWhereOrNull((stack) => stack.name == widget.stackName);
+      if (stack != null) {
+        setState(() {
+          stack.cards.add(newCard);
+          box.put(stack.key, stack); // Save updated stack back to Hive
+          _cardStates.add(CardState(showFrontSide: true, flipXAxis: false, flashCard: newCard));
+          _totalCards++;
+          _currentIndex = _cardStates.length - 1; // Move to the newly added card
+        });
+      }
+    }
+  }
+  void _nextCard() {
+    if (_currentIndex < _totalCards - 1) {
       setState(() {
-        // _cardStates.add(CardState(showFrontSide: true, flipXAxis: false, flashCard:));
-        //TODO:Figure out ,a token to pass in between the create new card screen and the card view
+        _currentIndex++;
+      });
+    }
+  }
+
+  void _previousCard() {
+    if (_currentIndex > 0) {
+      setState(() {
+        _currentIndex--;
       });
     }
   }
@@ -135,7 +152,7 @@ class _CardViewState extends State<CardView> with SingleTickerProviderStateMixin
             color: theme.iconTheme.color,
           ),
           IconButton(
-            onPressed: () => _navigateToCreateCardScreen(context),
+            onPressed: () => _navigateToAddCardScreen(context),
             icon: const Icon(Icons.add),
             color: theme.iconTheme.color,
           ),
@@ -146,26 +163,16 @@ class _CardViewState extends State<CardView> with SingleTickerProviderStateMixin
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: LinearProgressIndicator(
-                    value: progress,
-                    backgroundColor: theme.colorScheme.surface,
-                    color: theme.colorScheme.secondary,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  '${(_currentIndex + 1).toString()}/${_cardStates.length
-                      .toString()}',
-                  style: TextStyle(
-                    color: theme.colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+            //:TODO Learn how to fix this
+            // SizedBox(
+            //   height: 10,
+            //   child: LinearProgressIndicator(
+            //     value: progress,
+            //     backgroundColor: theme.colorScheme.surface,
+            //     color: theme.colorScheme.secondary,
+            //   ),
+            // ),
+            // const SizedBox(width: 10),
             Expanded(
               child: _cardStates.isEmpty
                   ? Center(

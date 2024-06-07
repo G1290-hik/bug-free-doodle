@@ -9,12 +9,12 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(FlashcardAdapter());
   Hive.registerAdapter(FlashcardStackAdapter());
-
-  // Open the boxes
+  //: Only Use when intiating on  a new device
+  // // Open the boxes
   var flashcardStackBox = await Hive.openBox<FlashcardStack>('flashcardStacks');
   var flashcardBox = await Hive.openBox<Flashcard>('flashcards');
 
-  // Add initial data if boxes are empty
+  // // Add initial data if boxes are empty
   if (flashcardStackBox.isEmpty && flashcardBox.isEmpty) {
     var flashcard1 = Flashcard(question: "What is Flutter?", answer: "A UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase.");
     var flashcard2 = Flashcard(question: "Who developed Flutter?", answer: "Google");

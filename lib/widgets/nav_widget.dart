@@ -15,10 +15,6 @@ class NavWidget extends StatelessWidget {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'Search',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Profile',
             ),
@@ -39,10 +35,6 @@ class NavWidget extends StatelessWidget {
             NavigationRailDestination(
               icon: Icon(Icons.home),
               label: Text('Home'),
-            ),
-            NavigationRailDestination(
-              icon: Icon(Icons.search),
-              label: Text('Search'),
             ),
             NavigationRailDestination(
               icon: Icon(Icons.person),

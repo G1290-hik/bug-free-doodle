@@ -29,7 +29,7 @@ class _ListCardState extends State<ListCard> {
         shadowColor: Colors.black,
         elevation: 5,
         child: Padding(
-          padding: const EdgeInsets.all(2.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -43,20 +43,6 @@ class _ListCardState extends State<ListCard> {
                   icon: const Icon(Icons.more_vert),
                   onPressed: () {},
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  ElevatedButton(
-                    child: const Text('Button'),
-                    onPressed: () {/* ... */},
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    child: const Text('Button 1'),
-                    onPressed: () {/* ... */},
-                  ),
-                ],
               ),
             ],
           ),

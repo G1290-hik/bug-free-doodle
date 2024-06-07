@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:responsivev2/views/views.dart';
+import 'package:responsivev2/widgets/medium_widget.dart';
 import 'package:responsivev2/widgets/widgets.dart';
-import 'favorite_screen.dart';
-import 'package:responsivev2/views/create_new_screen.dart';
 
 class SliverScreen extends StatelessWidget {
   const SliverScreen({super.key});
@@ -56,44 +56,46 @@ class SliverScreen extends StatelessWidget {
                   child: LayoutBuilder(
                     builder: (BuildContext context, BoxConstraints constraints) {
                       double width = constraints.maxWidth / 2;
-                      return Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const FavoriteScreen()),
-                              );
-                            },
-                            child: AdapterRowWidget(
-                              theme: theme,
-                              width: width,
-                              icon: Icons.star,
-                              iconColor: theme.colorScheme.secondary,
-                              title: 'Favorite',
-                              subtitle: 'test',
-                              align: CrossAxisAlignment.start,
-                            ),
-                          ),
-                          Expanded(
-                            child: GestureDetector(
+                      return IntrinsicHeight(
+                        child: Row(
+                          children: [
+                            GestureDetector(
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const CreateNewScreen()),
+                                  MaterialPageRoute(builder: (context) => const FavoriteScreen()),
                                 );
                               },
                               child: AdapterRowWidget(
-                                icon: Icons.add,
-                                iconColor: theme.colorScheme.secondary,
                                 theme: theme,
                                 width: width,
-                                title: 'Create New',
-                                align: CrossAxisAlignment.center,
+                                icon: Icons.star,
+                                iconColor: theme.colorScheme.secondary,
+                                title: 'Favorite',
+                                subtitle: 'test',
+                                align: CrossAxisAlignment.start,
                               ),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const CreateNewStackScreen(),),
+                                  );
+                                },
+                                child: AdapterRowWidget(
+                                  icon: Icons.add,
+                                  iconColor: theme.colorScheme.secondary,
+                                  theme: theme,
+                                  width: width,
+                                  title: 'Create New',
+                                  align: CrossAxisAlignment.center,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),
