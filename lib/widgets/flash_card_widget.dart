@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
 class FlippableCard extends StatefulWidget {
   final bool flipXAxis;
   final bool showFrontSide;
@@ -34,7 +33,7 @@ class _FlippableCardState extends State<FlippableCard> {
         var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
         tilt *= isUnder ? -1.0 : 1.0;
         final value =
-            isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
+        isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
         return Transform(
           transform: widget.flipXAxis
               ? (Matrix4.rotationY(value)..setEntry(3, 0, tilt))
@@ -46,7 +45,7 @@ class _FlippableCardState extends State<FlippableCard> {
     );
   }
 
-  Widget _buildFront(String text,Color color) {
+  Widget _buildFront(String text, Color color) {
     return __buildLayout(
       key: const ValueKey(true),
       backgroundColor: color,
@@ -57,7 +56,7 @@ class _FlippableCardState extends State<FlippableCard> {
     );
   }
 
-  Widget _buildRear(String body,Color color) {
+  Widget _buildRear(String body, Color color) {
     return __buildLayout(
       key: const ValueKey(false),
       backgroundColor: color,
@@ -68,7 +67,7 @@ class _FlippableCardState extends State<FlippableCard> {
             body,
             style: const TextStyle(
               fontSize: 50.0,
-              color: Colors.black
+              color: Colors.black,
             ),
           ),
         ),
@@ -115,20 +114,19 @@ class _FlippableCardState extends State<FlippableCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
-    final width=MediaQuery.sizeOf(context).width;
-    final height=MediaQuery.sizeOf(context).height;
+    final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final height = MediaQuery.sizeOf(context).height;
     double newWidth;
-    double wide(){
-      if(width>600){
-        newWidth=width*0.7;
-
+    double wide() {
+      if (width > 600) {
+        newWidth = width * 0.7;
+      } else {
+        newWidth = width * 0.9;
       }
-      else{
-        newWidth=width*0.9;
-      }
-     return newWidth;
+      return newWidth;
     }
+
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       transitionBuilder: (Widget card, Animation<double> animation) {
@@ -136,7 +134,7 @@ class _FlippableCardState extends State<FlippableCard> {
       },
       layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
         return SizedBox(
-          height: height*0.5,
+          height: height * 0.5,
           width: wide(),
           child: Stack(
             children: [
@@ -149,8 +147,8 @@ class _FlippableCardState extends State<FlippableCard> {
       switchInCurve: Curves.easeInOut,
       switchOutCurve: Curves.easeInOut.flipped,
       child: widget.showFrontSide
-          ? _buildFront(widget.frontext,theme.colorScheme.onSecondary)
-          : _buildRear(widget.backtext,theme.colorScheme.secondary),
+          ? _buildFront(widget.frontext, theme.colorScheme.onSecondary)
+          : _buildRear(widget.backtext, theme.colorScheme.secondary),
     );
   }
 }

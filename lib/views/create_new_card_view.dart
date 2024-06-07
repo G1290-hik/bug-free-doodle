@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CreateCardScreen extends StatefulWidget {
+  const CreateCardScreen({super.key});
+
   @override
   _CreateCardScreenState createState() => _CreateCardScreenState();
 }
@@ -12,7 +14,7 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create New Card'),
+        title: const Text('Create New Card'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,11 +22,11 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
           children: [
             TextField(
               controller: _cardTextController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Card Text',
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 final cardText = _cardTextController.text;
@@ -32,7 +34,7 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                   Navigator.pop(context, cardText);
                 }
               },
-              child: Text('Add Card'),
+              child: const Text('Add Card'),
             ),
           ],
         ),

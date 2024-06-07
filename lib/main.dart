@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:responsivev2/model/flash_card_model.dart';
+import 'package:responsivev2/model/stack_model.dart';
 import 'package:responsivev2/utility/utility.dart';
 import 'package:responsivev2/views/views.dart';
 
+Future<void> main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(FlashcardAdapter());
+  Hive.registerAdapter(FlashcardStackAdapter());
 
-void main() {
+  // Open the boxes
+  var flashcardStackBox = await Hive.openBox<FlashcardStack>('flashcardStacks');
+  var flashcardBox = await Hive.openBox<Flashcard>('flashcards');
+
+  // Add initial data if boxes are empty
+  if (flashcardStackBox.isEmpty && flashcardBox.isEmpty) {
+    var flashcard1 = Flashcard(question: "What is Flutter?", answer: "A UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase.");
+    var flashcard2 = Flashcard(question: "Who developed Flutter?", answer: "Google");
+
+    var flashcardStack = FlashcardStack(name: "General Knowledge", cards: [flashcard1, flashcard2]);
+
+    await flashcardBox.add(flashcard1);
+    await flashcardBox.add(flashcard2);
+    await flashcardStackBox.add(flashcardStack);
+  }
+
   runApp(const FlaschCardApp());
 }
 
@@ -24,9 +46,9 @@ class _FlaschCardAppState extends State<FlaschCardApp> {
 
     MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
-      title: 'Flasch Card App',
+      title: 'Flash Card App',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: CardView(),
+      home: const SliverScreen(),
     );
   }
 }

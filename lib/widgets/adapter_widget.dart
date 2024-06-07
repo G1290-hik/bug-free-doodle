@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Adapter_Row_Widget extends StatelessWidget {
-  const Adapter_Row_Widget({
+class AdapterRowWidget extends StatelessWidget {
+  const AdapterRowWidget({
     super.key,
     required this.theme,
     required this.width,
@@ -22,37 +22,36 @@ class Adapter_Row_Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Card(
-        color: theme.colorScheme.secondary,
-        child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          title: Column(
-            crossAxisAlignment: align,
-            children: [
-              CircleAvatar(
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                ),
+    return Container(
+      width: MediaQuery.sizeOf(context).width/2,
+      color: theme.colorScheme.secondary,
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: width * 0.05),
+        title: Column(
+          crossAxisAlignment: align,
+          children: [
+            CircleAvatar(
+              child: Icon(
+                icon,
+                color: iconColor,
               ),
-              Text(
-                title,
-                style: TextStyle(
-                  color: theme.colorScheme.onPrimary,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                color: theme.colorScheme.onPrimary,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
-          subtitle: subtitle != null
-              ? Text(
-                  subtitle!,
-                  style: TextStyle(color: theme.colorScheme.onTertiary),
-                )
-              : null,
+            ),
+          ],
         ),
+        subtitle: subtitle != null
+            ? Text(
+                subtitle!,
+                style: TextStyle(color: theme.colorScheme.onTertiary),
+              )
+            : null,
       ),
     );
   }

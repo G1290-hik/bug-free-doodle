@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:responsivev2/model/flash_card_model.dart';
 import 'package:responsivev2/widgets/flash_card_widget.dart';
 
+
+class CardState {
+  bool showFrontSide;
+  bool flipXAxis;
+  Flashcard flashCard;
+
+  CardState({
+    required this.showFrontSide,
+    required this.flipXAxis,
+    required this.flashCard,
+  });
+}
 class CardStack extends StatelessWidget {
   final List<CardState> cardStates;
   final Function(int) discardCard;
@@ -8,8 +21,8 @@ class CardStack extends StatelessWidget {
   const CardStack({
     required this.cardStates,
     required this.discardCard,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +41,11 @@ class CardStack extends StatelessWidget {
                   child: FlippableCard(
                     flipXAxis: cardStates[index].flipXAxis,
                     showFrontSide: cardStates[index].showFrontSide,
-                    onFlip: () {},
-                    backtext: 'Back ${index + 1}',
-                    frontext: 'Front ${index + 1}',
+                    onFlip: () {
+                      _flipCard(index, context);
+                    },
+                    backtext: cardStates[index].flashCard.answer,
+                    frontext: cardStates[index].flashCard.question,
                   ),
                 ),
               ),
@@ -46,26 +61,23 @@ class CardStack extends StatelessWidget {
               child: FlippableCard(
                 flipXAxis: cardStates[index].flipXAxis,
                 showFrontSide: cardStates[index].showFrontSide,
-                onFlip: () {},
-                backtext: 'Back ${index + 1}',
-                frontext: 'Front ${index + 1}',
+                onFlip: () {
+                  _flipCard(index, context);
+                },
+                backtext: cardStates[index].flashCard.answer,
+                frontext: cardStates[index].flashCard.question,
               ),
             ),
           ),
         );
       },
     );
-
+    cards = cards.reversed.toList();
     return Stack(children: cards);
   }
-}
 
-class CardState {
-  bool showFrontSide;
-  bool flipXAxis;
-
-  CardState({
-    required this.showFrontSide,
-    required this.flipXAxis,
-  });
+  void _flipCard(int index, BuildContext context) {
+    cardStates[index].showFrontSide = !cardStates[index].showFrontSide;
+    (context as Element).markNeedsBuild();
+  }
 }
