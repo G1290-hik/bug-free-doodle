@@ -18,7 +18,7 @@ class CardView extends StatefulWidget {
 }
 
 class _CardViewState extends State<CardView> with SingleTickerProviderStateMixin {
-  late List<CardState> _cardStates = []; // Initialize _cardStates here
+  late List<CardState> _cardStates = [];
   int _currentIndex = 0;
   late AnimationController _animationController;
 
@@ -56,7 +56,7 @@ class _CardViewState extends State<CardView> with SingleTickerProviderStateMixin
     }
 
     _currentIndex =
-    0; // Reset the current index whenever we initialize the card states
+    0;
   }
 
   void _switchCard() {
